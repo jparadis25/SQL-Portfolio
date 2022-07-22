@@ -1,35 +1,38 @@
---How many orders were placed in January?
---How many of those orders were for an iPhone
---Select the customer account numbers for all the orders in February
---Which product was the cheapest one sold in January? What was the price?
---What is the total revenue for each product sold in Jan?
---Which products were sold in Feb at 548 Lincoln St, Seatlle, WA 98101? How many of each were sold? What was the total revenue?
---How many customers ordered mroe than 2 products at a time in Feb? What was the average amount spent for those customers?
+--In this SQL, I am querying multiple tables that includes order and customer data that I have quanitfied.
 
+
+
+--How many orders were placed in January?
 SELECT COUNT(orderID)
 FROM BIT_DB.JanSales;
 
+--How many of those orders were for an iPhone
 SELECT COUNT(orderID)
 FROM BIT_DB.JanSales
 WHERE Product='iPhone';
 
+--Select the customer account numbers for all the orders in February
 SELECT acctnum
 FROM BIT_DB.customers c
 INNER JOIN BIT_DB.FebSales f
 ON c.order_id=f.orderID;
 
+--Which product was the cheapest one sold in January? What was the price?
 SELECT distinct product, MIN(price)
 FROM BIT_DB.JanSales
 WHERE price in (SELECT min(price) FROM BIT_DB.JanSales);
 
+--What is the total revenue for each product sold in Jan?
 SELECT sum(quantity)*price AS revenue
 FROM BIT_DB.JanSales
 GROUP BY product;
 
+--Which products were sold in Feb at 548 Lincoln St, Seatlle, WA 98101? How many of each were sold? What was the total revenue?
 SELECT sum(quantity)*price AS revenue, sum(quantity), product
 FROM BIT_DB.FebSales
 WHERE location='548 Lincoln St, Seattle, WA 98101';
 
+--How many customers ordered mroe than 2 products at a time in Feb? What was the average amount spent for those customers?
 SELECT count(cust.acctnum), avg(quantity*price)
 FROM BIT_DB.FebSales Feb
 LEFT JOIN BIT_DB.customers cust
