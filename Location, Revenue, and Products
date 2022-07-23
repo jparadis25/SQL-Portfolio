@@ -1,0 +1,33 @@
+--Here is another set of SQL Query's I did pertaining to locations, products, and revenue of a Dataset
+
+--Which locations in New York received at least 3 orders in January, and how many orders did they each receive? 
+SELECT distinct count(orderid), location
+FROM BIT_DB.JanSales
+WHERE location like '%NY%'
+GROUP BY location
+HAVING count(orderid)>2;
+
+--How many of each type of headphone were sold in February?
+SELECT sum(quantity), product
+FROM BIT_DB.FebSales
+WHERE product like '%headphone%'
+GROUP BY product;
+
+--What was the average amount spent per account in February?
+SELECT avg(quantity*price)
+FROM BIT_DB.FebSales Feb
+LEFT OUTER JOIN BIT_DB.customers cust
+ON Feb.orderid=cust.order_id;
+
+--What was the average quantity of products purchased per account in February?
+SELECT sum(quantity)/count(cust.acctnum)
+FROM BIT_DB.FebSales Feb
+LEFT OUTER JOIN BIT_DB.customers cust
+ON Feb.orderid=cust.order_id;
+
+--Which product brought in the most revenue in January and how much revenue did it bring in total?
+SELECT sum(quantity*price), product
+FROM BIT_DB.JanSales
+GROUP BY product
+ORDER BY sum(quantity*price) desc
+LIMIT 1;
